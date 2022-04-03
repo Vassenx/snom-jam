@@ -39,21 +39,6 @@ public class BossIK : MonoBehaviour
             
             curBone = curBone.GetChild(0);
         }
-        
-        /*for (int i = numOfBones - 1; i >= 0; i--)
-        {
-            bones[i] = curBone;
-            if (i != numOfBones - 1)
-            {
-                boneLengths[i] = (bones[i + 1].position - bones[i].position).magnitude;
-                totalLength += boneLengths[i];
-            }
-
-            if (i != 0)
-            {
-                curBone = curBone.GetChild(0);
-            }
-        }*/
     }
 
     private void Update()
