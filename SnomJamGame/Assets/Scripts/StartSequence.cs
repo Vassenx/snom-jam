@@ -47,11 +47,11 @@ public class StartSequence : MonoBehaviour
     private IEnumerator CooldownCoroutine()
     {
         bossName.enabled = true;
+        animator.Play("StartBossCamState");
         yield return new WaitForSeconds(bossNameTimeOnScreen);
         bossName.enabled = false;
         startCam = false;
         doneOnce = true;
-        animator.Play("StartBossCamState");
     }
     
     private void SwitchState()
