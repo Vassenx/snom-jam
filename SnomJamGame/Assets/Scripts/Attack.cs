@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class Attack : MonoBehaviour
 {
+    [SerializeField] private float cooldownGrabTime;
     [SerializeField] private float cooldownBubbleTime;
     [SerializeField] private float cooldownTime; // TODO: in projectile
     [SerializeField] private float maxHealth;
@@ -15,6 +16,7 @@ public class Attack : MonoBehaviour
     public Attack curTarget;  // just add in inspector since only 1 enemy
     private bool isProjectilesInCooldown = false;
     private bool isBubblesInCooldown = false;
+    private bool grabInCooldown = false;
     [SerializeField] private AudioSource bubbleAudio;
 
     [SerializeField] private ParticleSystem bubbles;
@@ -45,6 +47,28 @@ public class Attack : MonoBehaviour
             StartCoroutine(BubblesCooldownCoroutine());
         }
         // TODO: sound effect or something to show cant do attack
+        
+        
+        
+        // BOSS
+        if (!gameObject.CompareTag("Boss"))
+            return;
+
+        // wait til player attacks first
+        if (curHealth == maxHealth)
+            return;
+
+        if (!isProjectilesInCooldown)
+        {
+            ShootProjectile();
+            StartCoroutine(ProjectileCooldownCoroutine());
+        }
+
+        if (!grabInCooldown)
+        {
+            GetComponent<BossAI>().Grasp(curTarget.transform);
+            StartCoroutine(GrabCooldownCoroutine());
+        }
     }
 
     private void ShootProjectile()
@@ -65,6 +89,13 @@ public class Attack : MonoBehaviour
         isBubblesInCooldown = true;
         yield return new WaitForSeconds(cooldownBubbleTime);
         isBubblesInCooldown = false;
+    }
+    
+    private IEnumerator GrabCooldownCoroutine()
+    {
+        grabInCooldown = true;
+        yield return new WaitForSeconds(cooldownGrabTime);
+        grabInCooldown = false;
     }
     
     public void DamageDealt(float damage)
