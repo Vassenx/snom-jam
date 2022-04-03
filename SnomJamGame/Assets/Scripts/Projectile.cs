@@ -41,7 +41,11 @@ public class Projectile : MonoBehaviour
         }
         else if(projToTarget.sqrMagnitude <= maxRangeTilDespawn * maxRangeTilDespawn) // too far from target, run away off screen
         {
-            transform.position = projPos + (speed * Time.deltaTime * rb.velocity.normalized);
+            var dir = rb.velocity.normalized;
+            if (rb.velocity.sqrMagnitude < 0.1)
+                dir = attacker.transform.forward.normalized;
+            
+            transform.position = projPos + (speed * Time.deltaTime * dir);
         }
         else
         {

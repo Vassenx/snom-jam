@@ -9,6 +9,7 @@ public class ParticleTrigger : MonoBehaviour
     [SerializeField] private float damagePerParticle = 5f;
     private List<ParticleSystem.Particle> enteredParticles;
     private ParticleSystem ps;
+  
     private void Start()
     {
         enteredParticles = new List<ParticleSystem.Particle>();

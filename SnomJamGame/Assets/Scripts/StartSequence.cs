@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class StartSequence : MonoBehaviour
 {
@@ -42,6 +43,11 @@ public class StartSequence : MonoBehaviour
                 SwitchState();
             }
         }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            SceneManager.LoadScene("Scenes/StartScene");
+        }
     }
 
     private IEnumerator CooldownCoroutine()
@@ -63,6 +69,45 @@ public class StartSequence : MonoBehaviour
         else
         {
             animator.Play("PlayerCamState");
+        }
+    }
+
+    public void OnEndGame(bool won)
+    {
+        if (won)
+        {
+            bossName.enabled = true;
+            bossName.fontStyle = FontStyles.Strikethrough;
+            bossName.color = Color.red;
+        }
+        else
+        {
+            bossName.enabled = true; // hack
+            bossName.text = "DEATH";
+            bossName.color = Color.red;
+        }
+
+        PauseGame(true);
+        StartCoroutine(EndCoroutine());
+    }
+    
+    private IEnumerator EndCoroutine()
+    {
+        yield return new WaitForSecondsRealtime(bossNameTimeOnScreen);
+        bossName.enabled = false;
+        PauseGame(false);
+        SceneManager.LoadScene("Scenes/StartScene");
+    }
+    
+    private void PauseGame (bool pause)
+    {
+        if(pause)
+        {
+            Time.timeScale = 0f;
+        }
+        else 
+        {
+            Time.timeScale = 1;
         }
     }
 }
