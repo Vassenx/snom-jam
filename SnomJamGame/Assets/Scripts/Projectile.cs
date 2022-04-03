@@ -20,6 +20,7 @@ public class Projectile : MonoBehaviour
     {
         this.attacker = attack;
         this.target = attack.curTarget;
+        transform.forward = attack.transform.forward;
     }
     
     private void Start()
@@ -30,14 +31,15 @@ public class Projectile : MonoBehaviour
     private void Update()
     {
         var projPos = transform.position;
-        var projToAttacker = (attacker.transform.position - projPos);
+        var projToTarget = (target.transform.position - projPos);
+        float dotToTarget = Vector3.Dot(target.transform.forward, transform.forward); // angle/FOV
         
         /* movement */
-        if ((projToAttacker.sqrMagnitude <= maxRangeFromTarget * maxRangeFromTarget) && target != null)
+        if ((projToTarget.sqrMagnitude <= maxRangeFromTarget * maxRangeFromTarget) && dotToTarget < 0.2) // move to boss
         {
-            transform.position = projPos + (speed * Time.deltaTime * projToAttacker.normalized);
+            transform.position = projPos + (speed * Time.deltaTime * projToTarget.normalized);
         }
-        else if(projToAttacker.sqrMagnitude <= maxRangeTilDespawn * maxRangeTilDespawn) // too far from target, run away off screen
+        else if(projToTarget.sqrMagnitude <= maxRangeTilDespawn * maxRangeTilDespawn) // too far from target, run away off screen
         {
             transform.position = projPos + (speed * Time.deltaTime * rb.velocity.normalized);
         }
@@ -47,21 +49,21 @@ public class Projectile : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnCollisionEnter(Collision col)
     {
         if(target == null)
             return;
 
-        if (other.transform == target)
+        if (col.transform == target.transform)
         {
             target.DamageDealt(damage);
             
             // TODO: polish
-            if (other.CompareTag("Player"))
+            if (col.gameObject.CompareTag("Player"))
             {
             
             }
-            else if (other.CompareTag("Boss"))
+            else if (col.gameObject.CompareTag("Boss"))
             {
 
             }

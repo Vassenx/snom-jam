@@ -37,6 +37,9 @@ public class PlayerController : MonoBehaviour
     private void HandleBasicMovement()
     {
         var curVelocity = swimSpeed * curInputDirection;
+        if (curVelocity.sqrMagnitude < 0.1f)
+            return;
+        
         var velocityChange = rb.velocity - curVelocity;
 
         rb.AddForce(curVelocity, ForceMode.VelocityChange);

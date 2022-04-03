@@ -20,7 +20,7 @@ public class Attack : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0) && !isInCooldown)
+        if (Input.GetMouseButtonDown(0) && !isInCooldown && gameObject.CompareTag("Player"))
         {
             ShootProjectile();
         }
